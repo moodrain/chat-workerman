@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    Token <input id="token-input" />
+    <button onclick="connect()">Connect</button>
+    <br /> To <input id="to-input" /> Msg <input id="msg-input" />
+    <button onclick="send()">Send</button>
+    <br /> Received
+    <div id="msg-div"></div>
+</head>
+
+<body>
+    <script>
+        let wsUrl = 'chatServerWsUrl'
+        let tokenInput = document.querySelector('#token-input')
+        let msgDiv = document.querySelector('#msg-div')
+        let toInput = document.querySelector('#to-input')
+        let msgInput = document.querySelector('#msg-input')
+        let ws
+
+        function connect() {
+            ws = new WebSocket(wsUrl)
+            ws.addEventListener('open', () => {
+                ws.send(JSON.stringify({
+                    token: tokenInput.value,
+                    act: 'login',
+                    data: null,
+                    to: null,
+                }))
+            })
+            ws.addEventListener('message', (e) => {
+                let msg = JSON.parse(e.data)
+                let p = document.createElement('p')
+                p.innerHTML = msg.data.text
+                msgDiv.appendChild(p)
+                ws.send(JSON.stringify({
+                    act: 'chat:read',
+                    id: msg.id
+                }))
+            })
+            ws.addEventListener('close', () => {
+                let p = document.createElement('p')
+                p.innerHTML = 'Close Connection'
+                msgDiv.appendChild(p)
+            })
+        }
+
+        function send() {
+            ws.send(JSON.stringify({
+                act: 'chat:send',
+                data: {
+                    text: msgInput.value
+                },
+                to: toInput.value,
+            }))
+        }
+    </script>
+</body>
+
+</html>

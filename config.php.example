@@ -1,0 +1,25 @@
+<?php
+
+const APP_NAME = 'chat';
+
+const LISTEN_URL = 'websocket://127.0.0.1:9090';
+
+const REDIS_CONFIG = [
+    'host' => '127.0.0.1',
+    'port' => 6379,
+];
+
+const MYSQL_CONFIG = [
+    'host' => '127.0.0.1',
+    'port' => 3306,
+    'user' => 'root',
+    'pass' => 'root',
+    'db'   => 'chat',
+];
+
+const HEARTBEAT_INTERVAL = 55;
+
+const REDIS_KEYS = [
+    'onlineId' => 'chat:on:ids',
+    'userUnreadMsg' => 'chat:msg:ur:u:',
+];
